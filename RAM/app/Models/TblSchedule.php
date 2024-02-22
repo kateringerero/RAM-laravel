@@ -12,5 +12,11 @@ class TblSchedule extends Model
     public function user(){
         return $this->belongsTo(TblUser::class, 'creator_id', 'user_id');
     }
+
+    public function handler(){
+        return $this->belongsTo(TblUser::class, 'handled_by', 'user_id');
+    }
+
+
 }
 

@@ -23,7 +23,15 @@ class TblUser extends Model
         ];
 
 
-    public function schedules() {
-        return $this->hasMany(TblSchedule::class, 'creator_id', 'user_id');
-    }
+    public function schedules()
+        {
+            return $this->hasMany(TblSchedule::class, 'creator_id', 'user_id');
+        }
+
+    public function scopeActiveAdmins($query)
+        {
+            return $query->whereIn('role', ['admin', 'superadmin'])->where('is_active', true);
+        }
+
+
 }

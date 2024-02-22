@@ -7,11 +7,13 @@ use Illuminate\Support\Facades\DB;
 
 class UpdateStatusEnumInTblScheduleTable extends Migration
 {
+    // KENTH - dinagdag ko yung 'done' para sa done na switch sa update ng appointment
     public function up()
     {
         // Assuming your database is MySQL, use a raw query to alter the ENUM values
-        DB::statement("ALTER TABLE tbl_schedule MODIFY COLUMN status ENUM('pending', 'confirmed', 'cancelled', 'approved', 'rescheduled', 'follow-up', 'released')");
+        DB::statement("ALTER TABLE tbl_schedule MODIFY COLUMN status ENUM('pending', 'confirmed', 'cancelled', 'approved', 'rescheduled', 'follow-up', 'released', 'done')");
     }
+    // KENTH
 
     public function down()
     {

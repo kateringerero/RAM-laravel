@@ -6,29 +6,60 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 
+
 class AuthController extends Controller
 {
     public function login(Request $request)
-{
-    $request->validate([
-        'email_address' => 'required|email',
-        'password' => 'required',
-    ]);
+        {
+            $request->validate([
+                'email_address' => 'required|email',
+                'password' => 'required',
+            ]);
 
-    $credentials = [
-        'email_address' => $request->email_address,
-        'password' => $request->password,
-    ];
+            if (Auth::attempt(['email_address' => $request->email_address, 'password' => $request->password])) {
+                $user = Auth::user();
 
-    if (!Auth::attempt($credentials)) {
-        return response()->json(['message' => 'Unauthorized'], 401);
+                if (!$user->is_active) {
+                    Auth::logout();
+                    return back()->withErrors(['email_address' => 'Your account is inactive. Please contact support.']);
+                }
+
+                return $this->redirectBasedOnRole($user->role);
+            }
+
+            return back()->withErrors(['email_address' => 'Invalid credentials provided.']);
+        }
+
+
+    protected function redirectBasedOnRole($role)
+    {
+        switch ($role) {
+            case 'superadmin':
+                return redirect()->route('superadmin');
+            case 'admin':
+                return redirect()->route('admin');
+            case 'user':
+                return redirect()->route('user');
+            default:
+                return redirect('/');
+        }
     }
 
-    $user = Auth::user();
-    $token = $user->createToken('authToken')->plainTextToken;
+            public function showLoginForm()
+                {
+                    return view('auth.login');
+                }
 
-    return response()->json(['token' => $token]);
-}
+                public function logout(Request $request)
+                {
+                    auth()->logout();
+
+                    $request->session()->invalidate();
+
+                    $request->session()->regenerateToken();
+
+                    return redirect('/login')->with('message', 'Successfully logged out');
+                }
 
 
     public function createUser(Request $request)
@@ -62,10 +93,6 @@ class AuthController extends Controller
             'token' => $token,
         ], 201);
     }
-            public function showLoginForm()
-            {
-                return view('auth.login');
-            }
 
 
 }

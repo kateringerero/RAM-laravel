@@ -29,7 +29,7 @@ Route::middleware('auth:api')->group(function () {
 
     Route::post('/admin/create', [TblUserController::class, 'createAdmin'])->middleware(['auth:sanctum', 'isSuperAdmin']);
     Route::post('/users/create', [TblUserController::class, 'createUser']);
-    
+
 });
 
 Route::post('/schedules/create', [TblScheduleController::class, 'createSchedule']);
@@ -37,13 +37,29 @@ Route::post('/schedules/create', [TblScheduleController::class, 'createSchedule'
 Route::post('/login', [AuthController::class, 'login']);
 // Route::post('/login', [TblUserController::class, 'login']);
 
+Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum')->name('api.logout');
+
 Route::middleware(['auth:sanctum', 'isSuperAdmin'])->post('/admin/create', [TblUserController::class, 'createAdmin']);
 
 // Route::post('/login', 'AuthController@login')->name('login');
-Route::post('/login', [AuthController::class, 'login'])->name('login');
+// Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/login', [TblUserController::class, 'login'])->name('processLogin');
 
 Route::post('/users/create', [TblUserController::class, 'createUser']);
+
+Route::get('/schedules', [TblScheduleController::class, 'viewSchedules']);
+
+// for my account
+Route::middleware('auth:sanctum')->get('/user/details', [TblUserController::class, 'currentUserDetails']);
+
+// for update password
+Route::middleware('auth:sanctum')->post('/user/update-password', [TblUserController::class, 'updatePassword']);
+// for disable admin
+Route::post('/admins/disable/{user_id}', [TblUserController::class, 'disableAdmin'])->name('api.admins.disable');
+
+Route::post('/appointments/update/{reference_id}', 'App\Http\Controllers\Api\TblScheduleController@updateStatus')->name('appointments.updateStatus');
+
+
 
 
 

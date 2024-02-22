@@ -10,6 +10,42 @@ use Illuminate\Support\Facades\Validator;
 class TblScheduleController extends Controller
 {
 
+    public function index(Request $request)
+        {
+            $schedules = TblSchedule::with('user')->get();
+            if ($request->wantsJson()) {
+                return response()->json(['schedules' => $schedules]);
+            }
+            return view('schedules.index', compact('schedules'));
+        }
+
+    //KENTH - inayos ko yung switch cases, handled_by, at redirect route
+    public function updateStatus(Request $request, $reference_id)
+    {
+        $appointment = TblSchedule::where('reference_id', $reference_id)->firstOrFail();
+        $appointment->status = $request->status;
+
+        $user = auth()->user();
+        $appointment->handled_by = $user->user_id;
+
+        $appointment->save();
+
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json(['message' => 'Appointment status updated successfully.']);
+            }
+
+        return back()->with('success', 'Appointment status updated successfully.');
+    }
+    //KENTH
+
+     //KENTH
+     public function showAppointments()
+     {
+         $schedules = TblSchedule::with('user')->get();
+         return view('manage_appointments.index', compact('schedules'));
+     }
+     //KENTH
+
     public function createSchedule(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -19,7 +55,7 @@ class TblScheduleController extends Controller
             'start_time' => 'required|date_format:H:i',
             'end_time' => 'required|date_format:H:i|after:start_time',
             'purpose' => 'required|string',
-            'status' => 'required|string', 
+            'status' => 'required|string',
         ]);
 
             if ($validator->fails()) {
@@ -37,7 +73,10 @@ class TblScheduleController extends Controller
             $schedule->handled_by = 'unassigned';
             $schedule->save();
 
-        return response()->json(['message' => 'Schedule created successfully', 'schedule' => $schedule], 201);
+        // return response()->json(['message' => 'Schedule created successfully', 'schedule' => $schedule], 201);
+        // return redirect()->route('manage_appointments.index')->with('success', 'Status updated successfully.');
+        request()->session()->flash('success', 'Status updated successfully.');
+        return redirect()->back();
     }
 
     public function approveAppointment($reference_id)
@@ -74,11 +113,17 @@ class TblScheduleController extends Controller
         $appointment->start_time = $request->start_time;
         $appointment->end_time = $request->end_time;
         $appointment->status = 'rescheduled';
-        $appointment->handled_by = auth()->user()->user_id; 
+        $appointment->handled_by = auth()->user()->user_id;
         $appointment->save();
 
         return response()->json(['message' => 'Appointment rescheduled successfully']);
     }
+
+    public function editReschedule($reference_id)
+        {
+            $schedule = TblSchedule::where('reference_id', $reference_id)->firstOrFail();
+            return view('schedules.reschedule', compact('schedule'));
+        }
 
 
     public function followUpAppointment($reference_id)
@@ -97,7 +142,6 @@ class TblScheduleController extends Controller
     }
 
 
-
     public function releaseAppointment($reference_id)
     {
         $appointment = TblSchedule::where('reference_id', $reference_id)->first();
@@ -112,5 +156,31 @@ class TblScheduleController extends Controller
 
         return response()->json(['message' => 'Appointment released successfully']);
     }
+
+    public function viewSchedules()
+        {
+            // $schedules = TblSchedule::all();
+            $schedules = TblSchedule::with('user')->get();
+
+
+            return response()->json($schedules);
+        }
+
+            public function showDashboard()
+                {
+                    // $schedules = TblSchedule::all();
+                    $schedules = TblSchedule::with('user')->get();
+                    return view('dashboard.index', compact('schedules'));
+                }
+
+                public function handler()
+                    {
+                        $schedules = TblSchedule::with('user', 'handler')->get();
+                        return $this->belongsTo(TblUser::class, 'handled_by', 'user_id');
+                    }
+
+
+
+
 
 }
