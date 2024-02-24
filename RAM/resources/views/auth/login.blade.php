@@ -73,6 +73,7 @@
                         <form id="loginForm" action="{{ route('login') }}" method="POST">
                             @csrf
                             <div>
+                                <h3>test edit</h3>
                                 <label for="email">Email:</label>
                                 <input class="form form-control" type="email" id="email_address" name="email_address" required placeholder="Enter Email">
                             </div>
