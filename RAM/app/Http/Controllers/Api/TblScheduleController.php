@@ -179,7 +179,82 @@ class TblScheduleController extends Controller
                         return $this->belongsTo(TblUser::class, 'handled_by', 'user_id');
                     }
 
+// ANDROID
+    public function createScheduleAndroid(Request $request)
+            {
+                $validator = Validator::make($request->all(), [
+                    'creator_id' => 'required|string',
+                    'reference_id' => 'required|string',
+                    'scheduled_date' => 'required|date',
+                    'start_time' => 'required|date_format:H:i',
+                    'end_time' => 'required|date_format:H:i|after:start_time',
+                    'purpose' => 'required|string',
 
+                    ]);
+
+                        if ($validator->fails()) {
+                            return response()->json($validator->errors(), 400);
+                            }
+
+                            $schedule = new TblSchedule();
+                            $schedule->creator_id = $request->creator_id;
+                            $schedule->reference_id = $request->reference_id;
+                            $schedule->scheduled_date = $request->scheduled_date;
+                            $schedule->start_time = $request->start_time;
+                            $schedule->end_time = $request->end_time;
+                            $schedule->purpose = $request->purpose;
+                            $schedule->status = "pending";
+                            $schedule->handled_by = 'unassigned';
+                            $schedule->save();
+
+                        return response()->json(['message' => 'Schedule created successfully', 'schedule' => $schedule], 201);
+            }
+
+    public function getAppointmentsByCreatorId(Request $request)
+        {
+            $validator = Validator::make($request->all(), [
+                'creator_id' => 'required|string',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json($validator->errors(), 400);
+            }
+
+            $creatorId = $request->input('creator_id');
+
+            // Assuming you want to retrieve schedules for a specific creator
+            $appointments = TblSchedule::where('creator_id', $creatorId)
+                                        ->select('reference_id', 'scheduled_date', 'start_time', 'purpose', 'status')
+                                        ->get();
+
+            return response()->json(['message' => 'Appointments retrieved successfully', 'appointments' => $appointments], 200);
+        }
+
+
+
+    public function deleteScheduleAndroid(Request $request)
+        {
+            $validator = Validator::make($request->all(), [
+                'creator_id' => 'required|string',
+                'reference_id' => 'required|string',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json($validator->errors(), 400);
+            }
+
+            // Find the schedule to delete
+            $schedule = TblSchedule::where('reference_id', $request->reference_id)->first();
+
+            if (!$schedule) {
+                return response()->json(['message' => 'Schedule not found'], 404);
+            }
+
+            // Delete the schedule
+            $schedule->delete();
+
+            return response()->json(['message' => 'Schedule deleted successfully'], 200);
+        }
 
 
 
