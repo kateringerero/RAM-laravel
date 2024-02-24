@@ -73,10 +73,10 @@ class TblScheduleController extends Controller
             $schedule->handled_by = 'unassigned';
             $schedule->save();
 
-        // return response()->json(['message' => 'Schedule created successfully', 'schedule' => $schedule], 201);
+        return response()->json(['message' => 'Schedule created successfully', 'schedule' => $schedule], 201);
         // return redirect()->route('manage_appointments.index')->with('success', 'Status updated successfully.');
-        request()->session()->flash('success', 'Status updated successfully.');
-        return redirect()->back();
+        // request()->session()->flash('success', 'Status updated successfully.');
+        // return redirect()->back();
     }
 
     public function approveAppointment($reference_id)
