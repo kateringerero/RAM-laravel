@@ -59,7 +59,14 @@ Route::post('/admins/disable/{user_id}', [TblUserController::class, 'disableAdmi
 
 Route::post('/appointments/update/{reference_id}', 'App\Http\Controllers\Api\TblScheduleController@updateStatus')->name('appointments.updateStatus');
 
+// ANDROID
+Route::post('/login', [TblUserController::class, 'loginAndroid'])->name('processLogin');
 
+Route::get('/users/{user_id}/info', [TblUserController::class, 'showInfo_Android']);
+
+Route::post('/schedules/create', [TblScheduleController::class, 'createScheduleAndroid']);
+Route::get('/appointment/created',[TblScheduleController::class, 'getAppointmentsByCreatorId']);
+Route::post('/schedyles/delete', [TblScheduleController::class, 'deleteScheduleAndroid']);
 
 
 
