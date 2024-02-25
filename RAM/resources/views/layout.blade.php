@@ -16,8 +16,15 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('css/animate.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}">
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+
 </head>
-<body class='background' id="background">
+<body class='background' id="background" style="background-image: url('{{ asset('images/bg1.jpg') }}'); background-size: cover; background-position: center; background-repeat: no-repeat;">
 
     <div class="main">
         {{-- loader start --}}
@@ -56,72 +63,60 @@
 <div class="sidebar" id="sidebar">
     <div class="logo">
         <img src="{{ asset('images/ramlogosmall.png') }}" alt="Logo" width="200">
+        <div class="navbar-user">
+            <span>Welcome, {{ Auth::user()->first_name }}!</span>
+        </div>
     </div>
+
     <ul>
         <li>
             <div class="menu-item">
-                <img width="40" height="40" src="{{ asset('images/dashboard.png') }}"alt="dashboard">
-                <a class="menu-items" href="{{ route('dashboard.index') }}">Dashboard</a>
+                @if(auth()->check())
+                    @switch(auth()->user()->role)
+                        @case('admin')
+                            <a class="menu-items" href="{{ route('admin') }}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                            @break
+                        @case('superadmin')
+                            <a class="menu-items" href="{{ route('superadmin') }}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                            @break
+                        @default
+                            <a class="menu-items" href="{{ route('user') }}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                    @endswitch
+                @endif
             </div>
         </li>
 
             @if(auth()->check() && auth()->user()->role == 'superadmin')
         <li>
             <div class="menu-item">
-                <img width="40" height="40" src="{{ asset('images/admin.png') }}">
-                <a href="/manage-admins">Manage Admins</a>
+                <a class="menu-items" href="/manage-admins"><i class="fas fa-user-shield"></i> Manage Admins</a>
             </div>
         </li>
             @endif
 
         <li>
             <div class="menu-item">
-                <img width="40" height="40" src="{{ asset('images/appointments.png') }}">
-                <a class="menu-items" href="{{ route('manage-appointments') }}">Manage Appointments</a>
+                <a class="menu-items" href="{{ route('manage-appointments') }}"><i class="fas fa-calendar-check"></i> Manage Appointments</a>
             </div>
         </li>
 
         <li>
             <div class="menu-item">
-                <img width="40" height="40" src="{{ asset('images/my-account.png') }}">
-                <a class="menu-items" href="{{ route('my-account') }}">Account</a>
+                <a class="menu-items" href="{{ route('my-account') }}"><i class="fas fa-user-circle"></i> My Account</a>
             </div>
         </li>
     </ul>
-</div>
-
-
-<div class="content2">
-        <div class="navbar">
-            <div class="navbar-title"></div>
-            <div class="navbar-user">
-                <span>Welcome, {{ Auth::user()->first_name }}!</span>
-                <form action="{{ route('logout') }}" method="POST" style="display: inline;">
-                    @csrf
-                    <button type="submit">Logout</button>
-                </form>
-            </div>
-        </div>
+    <div class="logout-container">
+    <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+        @csrf
+        <button type="submit">Logout</button>
+    </form>
+    </div>
 </div>
 
 <div class="page-content">
     @yield('content')
 </div>
-
-{{-- bubbles start --}}
-<div class="bubbles_wrap">
-    <div class="bubble x1"></div>
-    <div class="bubble x2"></div>
-    <div class="bubble x3"></div>
-    <div class="bubble x4"></div>
-    <div class="bubble x5"></div>
-    <div class="bubble x6"></div>
-    <div class="bubble x7"></div>
-    <div class="bubble x8"></div>
-    <div class="bubble x9"></div>
-    <div class="bubble x10"></div>
-</div>
-{{-- bubbles end --}}
 
 <script src="{{ asset('js/jquery.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap.min.js') }}"></script>
