@@ -240,28 +240,27 @@ class TblScheduleController extends Controller
         }
 
 
-
+// UPDATED 2/25
     public function deleteScheduleAndroid(Request $request)
-        {
-            $validator = Validator::make($request->all(), [
-                'creator_id' => 'required|string',
+            {
+                $validator = Validator::make($request->all(), [
                 'reference_id' => 'required|string',
-            ]);
+                ]);
 
-            if ($validator->fails()) {
+                if ($validator->fails()) {
                 return response()->json($validator->errors(), 400);
-            }
+                }
 
-            // Find the schedule to delete
-            $schedule = TblSchedule::where('reference_id', $request->reference_id)->first();
+                // Find the schedule to delete
+                $schedule = TblSchedule::where('reference_id', $request->reference_id)->first();
 
-            if (!$schedule) {
+                if (!$schedule) {
                 return response()->json(['message' => 'Schedule not found'], 404);
+                }
+
+                // Delete the schedule
+                $schedule->delete();
+
+                return response()->json(['message' => 'Schedule deleted successfully'], 200);
             }
-
-            // Delete the schedule
-            $schedule->delete();
-
-            return response()->json(['message' => 'Schedule deleted successfully'], 200);
-        }
 }
