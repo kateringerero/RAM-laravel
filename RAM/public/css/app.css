@@ -1,50 +1,3 @@
-.sidebar {
-    height: 100vh;
-    width: 250px; /* width of icons */
-    position: fixed;
-    top: 0;
-    left: 0;
-    background-color: #deefe888;
-    transition: width 0.3s ease;
-    z-index: 1000;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    }
-
-.sidebar:hover {
-    width: 250px;
-  }
-
-.logo img {
-    max-width: 100%;
-    transition: transform 0.3s ease;
-  }
-
-
-  .menu-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin: 10px;
-    margin-left: 5px;
-  }
-
-  .menu-items {
-    color: rgb(56, 55, 55);
-  }
-
-
-.menu-item:hover {
-  color: rgb(173, 52, 58);
-}
-
-  ul, li {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    width: 100%;
-  }
 
   .content2 {
     position: fixed;
@@ -62,14 +15,33 @@
     margin-left: 300px;
 }
 
+.container-dashboard-appointments{
+    margin-left: 20px;
+}
+
 .appointments{
-    margin-left: 250px;
+    margin-left: 300px;
     margin-top: 70px;
 }
 
+/* manage admins */
 .container-manage-admin{
     margin-left: 300px;
+    margin-bottom: 20px;
 }
+
+.container-create-admin{
+    margin-left: 300px;
+    margin-bottom: 20px;
+}
+
+.container-create-admin .form-control{
+    width: 30%;
+    padding: px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
 
 /* APPOINTMENTS DASHBOARD */
 .appointmentbox{
@@ -78,6 +50,7 @@
     margin-right: 20px;
     height: 60vh;
     border: 1px solid rgb(255, 255, 255);
+    /* background-color: rgba(177, 173, 173, 0.164); */
     background-color: rgba(221, 221, 221, 0.164);
     box-shadow: 5px 5px 5px 5px #969696b4;
     backdrop-filter: blur(6px);
@@ -105,3 +78,36 @@
     text-align: center;
     margin-right: 20px;
   }
+
+  .scrollable-table {
+    overflow-y: auto;
+    height: 400px;
+}
+
+.superadmin-dashboard{
+    margin-left: 300px;
+}
+
+/* MY INFO */
+input[type="password"] {
+    width: 30%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+input._password {
+    width: 30%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+
+.form-control {
+    width: 30%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+

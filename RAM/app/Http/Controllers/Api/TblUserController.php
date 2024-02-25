@@ -180,5 +180,42 @@ class TblUserController extends Controller
             return redirect()->back()->with('success', 'Password updated successfully.');
         }
 
+        // ritchmarc
+        public function loginAndroid(Request $request)
+            {
+                $request->validate([
+                    'user_id' => 'required|string',
+                    'password' => 'required',
+                ]);
+
+                $user = TblUser::where('user_id', $request->user_id)->first();
+
+                if ($user && Hash::check($request->password, $user->password)) {
+                    $token = $user->createToken('ramtoken')->plainTextToken;
+
+                    return response()->json([
+                        'message' => 'Login successful',
+                        'token' => $token,
+                    ]);
+                } else {
+                    return response()->json(['message' => 'Invalid credentials'], 401);
+                }
+            }
+
+
+
+        public function showInfo_Android(Request $request)
+            {
+                $user = TblUser::select('first_name', 'last_name', 'email_address')
+                            ->where('user_id', $request->user_id)
+                            ->first();
+
+                if (!$user) {
+                    return response()->json(['error' => 'User not found'], 404);
+                }
+
+                return response()->json($user);
+            }
+
 }
 

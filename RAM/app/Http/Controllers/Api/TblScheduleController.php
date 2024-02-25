@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\TblSchedule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class TblScheduleController extends Controller
 {
@@ -50,7 +52,6 @@ class TblScheduleController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'creator_id' => 'required|string',
-            'reference_id' => 'required|string',
             'scheduled_date' => 'required|date',
             'start_time' => 'required|date_format:H:i',
             'end_time' => 'required|date_format:H:i|after:start_time',
@@ -58,25 +59,31 @@ class TblScheduleController extends Controller
             'status' => 'required|string',
         ]);
 
-            if ($validator->fails()) {
-                return response()->json($validator->errors(), 400);
-            }
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
 
-            $schedule = new TblSchedule();
-            $schedule->creator_id = $request->creator_id;
-            $schedule->reference_id = $request->reference_id;
-            $schedule->scheduled_date = $request->scheduled_date;
-            $schedule->start_time = $request->start_time;
-            $schedule->end_time = $request->end_time;
-            $schedule->purpose = $request->purpose;
-            $schedule->status = $request->status;
-            $schedule->handled_by = 'unassigned';
-            $schedule->save();
+        $referenceID = 'RAM' . str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT);
 
-        // return response()->json(['message' => 'Schedule created successfully', 'schedule' => $schedule], 201);
+        while (TblSchedule::where('reference_id', $referenceID)->exists()) {
+            $referenceID = 'RAM' . str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT);
+        }
+
+        $schedule = new TblSchedule();
+        $schedule->creator_id = $request->creator_id;
+        $schedule->reference_id = $referenceID;
+        $schedule->scheduled_date = $request->scheduled_date;
+        $schedule->start_time = $request->start_time;
+        $schedule->end_time = $request->end_time;
+        $schedule->purpose = $request->purpose;
+        $schedule->status = $request->status;
+        $schedule->handled_by = 'unassigned';
+        $schedule->save();
+
+        return response()->json(['message' => 'Schedule created successfully', 'schedule' => $schedule], 201);
         // return redirect()->route('manage_appointments.index')->with('success', 'Status updated successfully.');
-        request()->session()->flash('success', 'Status updated successfully.');
-        return redirect()->back();
+        // request()->session()->flash('success', 'Status updated successfully.');
+        // return redirect()->back();
     }
 
     public function approveAppointment($reference_id)
@@ -168,9 +175,16 @@ class TblScheduleController extends Controller
 
             public function showDashboard()
                 {
-                    // $schedules = TblSchedule::all();
-                    $schedules = TblSchedule::with('user')->get();
-                    return view('dashboard.index', compact('schedules'));
+                    $userRole = auth()->user()->role;
+
+                    switch ($userRole) {
+                        case 'admin':
+                            return view('admin');
+                        case 'superadmin':
+                            return view('superadmin');
+                        default:
+                            return view('user');
+                    }
                 }
 
                 public function handler()
@@ -180,6 +194,108 @@ class TblScheduleController extends Controller
                     }
 
 
+    // Analytics
+    // public function monthlyScheduleAnalytics()
+    //     {
+    //         $monthlySchedules = TblSchedule::select(DB::raw('count(id) as `count`'), DB::raw("DATE_FORMAT(created_at, '%Y-%m') as month"))
+    //             ->groupBy('month')
+    //             ->orderBy('month', 'desc')
+    //             ->get();
+
+    //             return view('dashboard.index', compact('monthlySchedules'));
+    //     }
+    public function monthlyScheduleAnalytics(Request $request)
+    {
+        $selectedMonth = $request->input('month'); // YYYY-MM format
+
+        $monthlySchedulesQuery = TblSchedule::select(DB::raw('count(id) as `count`'), DB::raw("DATE_FORMAT(created_at, '%Y-%m') as month"))
+                                            ->groupBy('month');
+
+        if ($selectedMonth) {
+            $monthlySchedulesQuery = $monthlySchedulesQuery->having('month', '=', $selectedMonth);
+        }
+
+        $monthlySchedules = $monthlySchedulesQuery->orderBy('month', 'desc')->get();
+
+        return view('dashboard.index', compact('monthlySchedules', 'selectedMonth'));
+    }
+
+// ANDROID
+    public function createScheduleAndroid(Request $request)
+            {
+                $validator = Validator::make($request->all(), [
+                    'creator_id' => 'required|string',
+                    'reference_id' => 'required|string',
+                    'scheduled_date' => 'required|date',
+                    'start_time' => 'required|date_format:H:i',
+                    'end_time' => 'required|date_format:H:i|after:start_time',
+                    'purpose' => 'required|string',
+
+                    ]);
+
+                        if ($validator->fails()) {
+                            return response()->json($validator->errors(), 400);
+                            }
+
+                            $schedule = new TblSchedule();
+                            $schedule->creator_id = $request->creator_id;
+                            $schedule->reference_id = $request->reference_id;
+                            $schedule->scheduled_date = $request->scheduled_date;
+                            $schedule->start_time = $request->start_time;
+                            $schedule->end_time = $request->end_time;
+                            $schedule->purpose = $request->purpose;
+                            $schedule->status = "pending";
+                            $schedule->handled_by = 'unassigned';
+                            $schedule->save();
+
+                return response()->json(['message' => 'Schedule created successfully', 'schedule' => $schedule], 201);
+            }
+
+    public function getAppointmentsByCreatorId(Request $request)
+        {
+            $validator = Validator::make($request->all(), [
+                'creator_id' => 'required|string',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json($validator->errors(), 400);
+            }
+
+            $creatorId = $request->input('creator_id');
+
+            // Assuming you want to retrieve schedules for a specific creator
+            $appointments = TblSchedule::where('creator_id', $creatorId)
+                                        ->select('reference_id', 'scheduled_date', 'start_time', 'purpose', 'status')
+                                        ->get();
+
+            return response()->json(['message' => 'Appointments retrieved successfully', 'appointments' => $appointments], 200);
+        }
+
+
+
+    public function deleteScheduleAndroid(Request $request)
+        {
+            $validator = Validator::make($request->all(), [
+                'creator_id' => 'required|string',
+                'reference_id' => 'required|string',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json($validator->errors(), 400);
+            }
+
+            // Find the schedule to delete
+            $schedule = TblSchedule::where('reference_id', $request->reference_id)->first();
+
+            if (!$schedule) {
+                return response()->json(['message' => 'Schedule not found'], 404);
+            }
+
+            // Delete the schedule
+            $schedule->delete();
+
+            return response()->json(['message' => 'Schedule deleted successfully'], 200);
+        }
 
 
 

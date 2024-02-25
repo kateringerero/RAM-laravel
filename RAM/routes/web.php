@@ -62,11 +62,20 @@ Route::get('/user/info', function () {
     return view('user');
 })->name('user');
 
-Route::get('/dashboard', [TblScheduleController::class, 'showDashboard'])->name('dashboard.index');
+Route::get('/admin/dashboard', [TblScheduleController::class, 'showDashboard'])->middleware('auth', 'role:admin')->name('admin');
+Route::get('/superadmin/dashboard', [TblScheduleController::class, 'showDashboard'])->middleware('auth', 'role:superadmin')->name('superadmin');
+Route::get('/user/info', [TblScheduleController::class, 'showDashboard'])->middleware('auth')->name('user');
+
+
+// Route::get('/dashboard', [TblScheduleController::class, 'showDashboard'])->name('dashboard');
 
 Route::post('/manage-appointments', [TblScheduleController::class, 'updateStatus'])->name('schedules.updateStatus');
 
 Route::post('/appointments/update/{reference_id}', [App\Http\Controllers\Api\TblScheduleController::class, 'updateStatus'])->name('appointments.updateStatus');
+
+// Analytics
+// Route::get('/dashboard', [TblScheduleController::class, 'monthlyScheduleAnalytics'])->name('dashboard.index');
+Route::get('/dashboard', [TblScheduleController::class, 'monthlyScheduleAnalytics'])->name('dashboard.index');
 
 
 // update password

@@ -2,22 +2,22 @@
 
 @section('content')
 <div class="container">
-    <h2>My Profile</h2>
+    <h2>Personal Data</h2>
     <div>
-        <label>First Name:</label> <span>{{ Auth::user()->first_name }}</span>
+        <label>First Name:</label> <b><span>{{ Auth::user()->first_name }}</span></b>
     </div>
     <div>
-        <label>Last Name:</label> <span>{{ Auth::user()->last_name }}</span>
+        <label>Last Name:</label> <b><span>{{ Auth::user()->last_name }}</span></b>
     </div>
     <div>
-        <label>Middle Name:</label> <span>{{ Auth::user()->middle_name }}</span>
+        <label>Middle Name:</label> <b><span>{{ Auth::user()->middle_name }}</span></b>
     </div>
     <div>
-        <label>Email Address:</label> <span>{{ Auth::user()->email_address }}</span>
+        <label>Email Address:</label> <b><span>{{ Auth::user()->email_address }}</span></b>
     </div>
 
     <form action="{{ route('user.update-password') }}" method="POST">
-        @csrf <!-- CSRF token for security -->
+        @csrf
         <div class="form-group">
             <label for="current_password">Current Password</label>
             <input type="password" class="_password" name="current_password" required>
@@ -35,6 +35,7 @@
 
         <button type="submit" class="btn btn-primary">Save</button>
     </form>
+
 
     @if ($errors->any())
         <div class="alert alert-danger mt-3">

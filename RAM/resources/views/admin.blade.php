@@ -6,5 +6,5 @@
 @endsection
 
 @section('content')
-
+<h4>testing admin</h4>
 @endsection
