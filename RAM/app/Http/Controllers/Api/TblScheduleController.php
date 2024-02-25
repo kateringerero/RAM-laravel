@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\TblSchedule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class TblScheduleController extends Controller
 {
@@ -46,38 +48,38 @@ class TblScheduleController extends Controller
      }
      //KENTH
 
-    public function createSchedule(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'creator_id' => 'required|string',
-            'reference_id' => 'required|string',
-            'scheduled_date' => 'required|date',
-            'start_time' => 'required|date_format:H:i',
-            'end_time' => 'required|date_format:H:i|after:start_time',
-            'purpose' => 'required|string',
-            'status' => 'required|string',
-        ]);
+     public function createSchedule(Request $request)
+     {
+         $validator = Validator::make($request->all(), [
+             'creator_id' => 'required|string',
+             'reference_id' => 'required|string',
+             'scheduled_date' => 'required|date',
+             'start_time' => 'required|date_format:H:i',
+             'end_time' => 'required|date_format:H:i|after:start_time',
+             'purpose' => 'required|string',
+             'status' => 'required|string',
+         ]);
 
-            if ($validator->fails()) {
-                return response()->json($validator->errors(), 400);
-            }
+             if ($validator->fails()) {
+                 return response()->json($validator->errors(), 400);
+             }
 
-            $schedule = new TblSchedule();
-            $schedule->creator_id = $request->creator_id;
-            $schedule->reference_id = $request->reference_id;
-            $schedule->scheduled_date = $request->scheduled_date;
-            $schedule->start_time = $request->start_time;
-            $schedule->end_time = $request->end_time;
-            $schedule->purpose = $request->purpose;
-            $schedule->status = $request->status;
-            $schedule->handled_by = 'unassigned';
-            $schedule->save();
+             $schedule = new TblSchedule();
+             $schedule->creator_id = $request->creator_id;
+             $schedule->reference_id = $request->reference_id;
+             $schedule->scheduled_date = $request->scheduled_date;
+             $schedule->start_time = $request->start_time;
+             $schedule->end_time = $request->end_time;
+             $schedule->purpose = $request->purpose;
+             $schedule->status = $request->status;
+             $schedule->handled_by = 'unassigned';
+             $schedule->save();
 
-        return response()->json(['message' => 'Schedule created successfully', 'schedule' => $schedule], 201);
-        // return redirect()->route('manage_appointments.index')->with('success', 'Status updated successfully.');
-        // request()->session()->flash('success', 'Status updated successfully.');
-        // return redirect()->back();
-    }
+         // return response()->json(['message' => 'Schedule created successfully', 'schedule' => $schedule], 201);
+         // return redirect()->route('manage_appointments.index')->with('success', 'Status updated successfully.');
+         request()->session()->flash('success', 'Status updated successfully.');
+         return redirect()->back();
+     }
 
     public function approveAppointment($reference_id)
     {
@@ -168,9 +170,16 @@ class TblScheduleController extends Controller
 
             public function showDashboard()
                 {
-                    // $schedules = TblSchedule::all();
-                    $schedules = TblSchedule::with('user')->get();
-                    return view('dashboard.index', compact('schedules'));
+                    $userRole = auth()->user()->role;
+
+                    switch ($userRole) {
+                        case 'admin':
+                            return view('admin');
+                        case 'superadmin':
+                            return view('superadmin');
+                        default:
+                            return view('user');
+                    }
                 }
 
                 public function handler()
@@ -207,7 +216,7 @@ class TblScheduleController extends Controller
                             $schedule->handled_by = 'unassigned';
                             $schedule->save();
 
-                        return response()->json(['message' => 'Schedule created successfully', 'schedule' => $schedule], 201);
+                return response()->json(['message' => 'Schedule created successfully', 'schedule' => $schedule], 201);
             }
 
     public function getAppointmentsByCreatorId(Request $request)
@@ -255,7 +264,4 @@ class TblScheduleController extends Controller
 
             return response()->json(['message' => 'Schedule deleted successfully'], 200);
         }
-
-
-
 }
