@@ -2,6 +2,40 @@
 
 @section('content')
 <div class="container-manage-admin">
+    <h2>Manage Admins</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>User ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($admins as $admin)
+                <tr>
+                    <td>{{ $admin->id }}</td>
+                    <td>{{ $admin->user_id }}</td>
+                    <td>{{ $admin->first_name }} {{ $admin->last_name }}</td>
+                    <td>{{ $admin->email_address }}</td>
+                    <td>{{ $admin->role }}</td>
+                    <td>
+                        <form action="{{ route('admins.disable', $admin->user_id) }}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-warning" onclick="return confirm('Are you sure you want to disable this admin?')">Disable</button>
+                        </form>
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+</div>
+
+<div class="container-create-admin">
     <h2>Create New Admin</h2>
     @if(session('success'))
         <div class="alert alert-success" role="alert">
@@ -9,8 +43,7 @@
         </div>
     @endif
     <form action="{{ route('admin.create') }}" method="POST">
-        @csrf <!-- CSRF token for security -->
-
+        @csrf
         <div class="form-group">
             <label for="user_id">User ID</label>
             <input type="text" class="form-control" id="user_id" name="user_id" required>
@@ -46,39 +79,5 @@
 
         <button type="submit" class="btn btn-primary">Create Admin</button>
     </form>
-
-        <h2>Manage Admins</h2>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>User ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Role</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($admins as $admin)
-                <tr>
-                    <td>{{ $admin->id }}</td>
-                    <td>{{ $admin->user_id }}</td>
-                    <td>{{ $admin->first_name }} {{ $admin->last_name }}</td>
-                    <td>{{ $admin->email_address }}</td>
-                    <td>{{ $admin->role }}</td>
-                    <td>
-                        <!-- Disable Admin Button/Form -->
-                        <form action="{{ route('admins.disable', $admin->user_id) }}" method="POST"> <!-- Adjusted for disable action -->
-                            @csrf
-                            <!-- No need for @method('DELETE') since we are now using POST for disable -->
-                            <button type="submit" class="btn btn-warning" onclick="return confirm('Are you sure you want to disable this admin?')">Disable</button>
-                        </form>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
 </div>
 @endsection
-
