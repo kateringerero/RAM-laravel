@@ -4,16 +4,15 @@
 <div class="container">
     <h2>My Profile</h2>
     <div>
-        <label>First Name:</label> <span>{{ Auth::user()->first_name }}</span>
+        <label>First Name:</label> <b><span>{{ Auth::user()->first_name }}</span></b>
     </div>
     <div>
-        <label>Last Name:</label> <span>{{ Auth::user()->last_name }}</span>
+        <label>Last Name:</label> <b><span>{{ Auth::user()->last_name }}</span></b>
+    <div>
+        <label>Middle Name:</label> <b><span>{{ Auth::user()->middle_name }}</span></b>
     </div>
     <div>
-        <label>Middle Name:</label> <span>{{ Auth::user()->middle_name }}</span>
-    </div>
-    <div>
-        <label>Email Address:</label> <span>{{ Auth::user()->email_address }}</span>
+        <label>Email Address:</label> <b><span>{{ Auth::user()->email_address }}</span></b>
     </div>
 
     <form action="{{ route('user.update-password') }}" method="POST">
