@@ -61,5 +61,18 @@
     </div>
     </div>
 </div>
+<div class="appointments">
+<div class = "statistics">
+    <div class = "stats">
+        <p>releasing</p>
+    </div>
+    <div class = "stats">
+        <p>releasing</p>
+    </div>
+    <div class = "stats">
+        <p>approved</p>
+    </div>
+</div>
+</div>
 
 @endsection
