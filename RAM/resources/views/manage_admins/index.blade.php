@@ -25,7 +25,7 @@
                     <td>
                         <form action="{{ route('admins.disable', $admin->user_id) }}" method="POST">
                             @csrf
-                            @method('DELETE')
+                            @method('POST')
                             <button type="submit" class="btn btn-warning" onclick="return confirm('Are you sure you want to disable this admin?')">Disable</button>
                         </form>
                     </td>
