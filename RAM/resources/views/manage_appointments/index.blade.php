@@ -3,19 +3,25 @@
 @section('content')
 @if($schedules->isNotEmpty())
         <div class="container-manage-appointments">
-            <h2>Manage Appointments</h2>
+            <div class="header-with-search">
+                <h2>Manage Appointments</h2>
+                <form action="{{ route('manage_appointments.index') }}" method="GET" class="search-form">
+                    <input type="text" name="search" placeholder="Search by Reference ID, Name..." value="{{ request('search') }}">
+                    <button type="submit">Search</button>
+                </form>
+            </div>
             <table class="table">
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th><a href="{{ route('manage_appointments.index', ['sort' => 'id', 'direction' => request('direction', 'asc') == 'asc' ? 'desc' : 'asc']) }}">ID</a></th>
                         <th>Creator ID</th>
-                        <th>Reference ID</th>
+                        <th><a href="{{ route('manage_appointments.index', ['sort' => 'reference_id', 'direction' => request('direction', 'asc') == 'asc' ? 'desc' : 'asc']) }}">Reference ID</a></th>
                         <th>Name</th>
                         <th>Email</th>
-                        <th>Scheduled Date</th>
+                        <th><a href="{{ route('manage_appointments.index', ['sort' => 'scheduled_date', 'direction' => request('direction', 'asc') == 'asc' ? 'desc' : 'asc']) }}">Scheduled Date</a></th>
                         <th>Time</th>
                         <th>Purpose</th>
-                        <th>Status</th>
+                        <th><a href="{{ route('manage_appointments.index', ['sort' => 'status', 'direction' => request('direction', 'asc') == 'asc' ? 'desc' : 'asc']) }}">Status</a></th>
                         <th>Handled By</th>
                         <th>Actions</th>
                     </tr>
@@ -62,7 +68,7 @@
                             <form action="{{ route('appointments.updateStatus', ['reference_id' => $schedule->reference_id]) }}" method="POST">
                                 @csrf
                                 <select name="status" required onchange="this.form.submit()">
-                                    <option value="">Change Status</option>
+                                    <option value="">Select Status</option>
                                     <option value="approved">Approve</option>
                                     <option value="released">Release</option>
                                     <option value="follow-up">Follow Up</option>
@@ -76,6 +82,7 @@
                     @endforeach
                 </tbody>
             </table>
+            {{ $schedules->links() }}
         </div>
 
     @endif
