@@ -68,6 +68,8 @@ Route::post('/schedules/create', [TblScheduleController::class, 'createScheduleA
 Route::get('/appointment/created',[TblScheduleController::class, 'getAppointmentsByCreatorId']);
 // UPDATED 2/25
 Route::post('/schedules/delete', [TblScheduleController::class, 'deleteScheduleAndroid']);
+// UPDATED 2/29
+Route::put('/appointments/{reference_id}', [TblScheduleController::class, 'updateScheduleAndroid']);
 
 
 
