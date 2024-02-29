@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class TblSchedule extends Model
 {
+
+
+
     protected $table = 'tbl_schedule';
 
     public function user(){
@@ -16,6 +19,8 @@ class TblSchedule extends Model
     public function handler(){
         return $this->belongsTo(TblUser::class, 'handled_by', 'user_id');
     }
+
+
 
 
 }
