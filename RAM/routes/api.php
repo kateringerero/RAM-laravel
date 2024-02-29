@@ -66,9 +66,5 @@ Route::get('/users/{user_id}/info', [TblUserController::class, 'showInfo_Android
 
 Route::post('/schedules/create', [TblScheduleController::class, 'createScheduleAndroid']);
 Route::get('/appointment/created',[TblScheduleController::class, 'getAppointmentsByCreatorId']);
-Route::post('/schedyles/delete', [TblScheduleController::class, 'deleteScheduleAndroid']);
-
-
-
-
-
+Route::post('/schedules/delete', [TblScheduleController::class, 'deleteScheduleAndroid']);
+Route::put('/appointments/{reference_id}', [TblScheduleController::class, 'updateScheduleAndroid']);

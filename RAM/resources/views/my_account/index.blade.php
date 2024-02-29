@@ -1,7 +1,7 @@
 @extends('layout')
 
 @section('content')
-<div class="container">
+<div class="personal-data">
     <h2>Personal Data</h2>
     <div>
         <label>First Name:</label> <b><span>{{ Auth::user()->first_name }}</span></b>
@@ -33,7 +33,7 @@
             <input type="password" class="form-control" id="new_password_confirmation" name="new_password_confirmation" required>
         </div>
 
-        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="submit">Save</button>
     </form>
 
 
