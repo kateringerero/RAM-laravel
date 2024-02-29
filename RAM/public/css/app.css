@@ -1,52 +1,4 @@
-.sidebar {
-    height: 100vh;
-    width: 250px; /* width of icons */
-    position: fixed;
-    top: 0;
-    left: 0;
-    background-color: #deefe888;
-    transition: width 0.3s ease;
-    z-index: 1000;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    }
-
-.sidebar:hover {
-    width: 250px;
-  }
-
-.logo img {
-    max-width: 100%;
-    transition: transform 0.3s ease;
-  }
-
-
-  .menu-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin: 10px;
-    margin-left: 5px;
-  }
-
-  .menu-items {
-    color: rgb(56, 55, 55);
-  }
-
-
-.menu-item:hover {
-  color: rgb(173, 52, 58);
-}
-
-  ul, li {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    width: 100%;
-  }
-
-  .content2 {
+.content2 {
     position: fixed;
     top: 0;
     left: 0;
@@ -59,24 +11,170 @@
 }
 
 .container-manage-appointments{
-    margin-left: 300px;
+    margin-left: 310px;
 }
 
-.appointments{
-    margin-left: 250px;
-    margin-top: 70px;
+.container-dashboard-appointments{
+    margin-left: 20px;
 }
 
+/* my account */
+.personal-data{
+    margin-left: 320px;
+    margin-bottom: 20px;
+    max-width: 600px;
+        margin: 20px auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+}
+
+.personal-data h2 {
+    text-align: center;
+    color: #333;
+}
+
+.personal-data div {
+    margin-bottom: 10px;
+}
+
+.personal-data label {
+    font-weight: bold;
+    margin-right: 12px;
+}
+
+.personal-data span {
+    color: #555;
+}
+
+.personal-data button {
+    background-color: #4faa84;
+    border-radius: 5px;
+}
+
+.personal-data button:hover {
+    background-color: #3c946f;
+}
+
+
+
+/*  */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group input[type="password"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.alert {
+    padding: 10px;
+    margin-top: 20px;
+    border-radius: 4px;
+    color: #fff;
+}
+
+.alert-danger {
+    background-color: #dc3545;
+}
+
+.alert-success {
+    background-color: #28a745;
+}
+
+
+/* manage admins */
 .container-manage-admin{
-    margin-left: 300px;
+    margin-left: 320px;
+    margin-bottom: 20px;
+}
+
+.container-create-admin{
+    margin-left: 310px;
+    margin-bottom: 20px;
+}
+
+.container-create-admin .form-control{
+    width: 30%;
+    padding: px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* manage appointments status button */
+select[name="status"] {
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: #f8f9fa;
+    color: #495057;
+    font-size: 12px;
+    outline: none;
+
+
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" fill="%23495057"><polygon points="896 384 512 768 128 384"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 2px center;
+    background-size: 12px;
+}
+
+select[name="status"]:hover {
+    border-color: #adb5bd;
+    background-color: #e9ecef;
+}
+
+select[name="status"]:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
 }
 
 /* APPOINTMENTS DASHBOARD */
+.table td{
+    font-size: 12px;
+}
+
+.table th a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.appointments{
+    margin-left: 300px;
+    margin-top: 10px;
+}
+
+
+
 .appointmentbox{
-    padding: 10px 20px;
-    margin: 0px 0px 10px 15px;
+    overflow: auto;
     margin-right: 20px;
-    height: 60vh;
+    margin-left: 10px;
+    height: 70vh;
     border: 1px solid rgb(255, 255, 255);
     background-color: rgba(221, 221, 221, 0.164);
     box-shadow: 5px 5px 5px 5px #969696b4;
@@ -84,7 +182,88 @@
     border-radius: 25px;
   }
 
+  /* searchbar */
+  .header-with-search {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+  .search-form {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+}
+
+    .search-form input {
+        margin-right: 5px;
+        width: 300px;
+        padding-left: 10px;
+        border: 2px solid #cccccc;
+        border-radius: 5px;
+        color: #333;
+        outline: none;
+        padding: 4px;
+        font-size: 14px;
+    }
+
+    .search-form input[type="text"] {
+        font-size: 13px;
+        margin-left: 5px;
+    }
+
+    .search-form button {
+        border-radius: 8px;
+        background-color: #4faa84;
+        margin-right: 8px;
+    }
+
+    /* PAGINATION */
+    .pagination {
+        display: flex;
+        justify-content: center;
+        padding: 10px;
+    }
+
+    .page-item {
+        margin: 0 1px;
+    }
+
+    /* Page links */
+    .page-link {
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        color: #007bff;
+
+        padding: 5px 10px;
+        border-radius: 5px;
+
+        transition: background-color 0.3s, color 0.3s;
+        font-size: 13px;
+    }
+
+    .page-link:hover {
+        background-color: #007bff;
+        color: #ffffff;
+        text-decoration: none;
+    }
+
+    .page-item.active .page-link {
+        background-color: #007bff;
+        color: #ffffff;
+    }
+
+    .showing-text{
+        margin-left: 10px;
+        margin-bottom: 10px;
+    }
+
   /* STATISTICS */
+  .appointments-stats{
+    margin-left: 300px;
+    margin-top: 30px;
+}
   .statistics{
     margin-left: 15px;
     margin: 0px 0px 50px 15px;
@@ -94,9 +273,14 @@
     justify-content: space-around;
     gap: 5rem;
   }
-  .stats{
-    margin-top: 2rem;
-    width: 30rem;
+
+  .stats {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0;
+    width: 300px;
     height: 10vh;
     border: 1px solid rgb(255, 255, 255);
     background-color: rgba(221, 221, 221, 0.164);
@@ -104,4 +288,53 @@
     backdrop-filter: blur(6px);
     text-align: center;
     margin-right: 20px;
-  }
+}
+
+.big-number, .stats p {
+    margin: 2px;
+    padding: 0;
+}
+
+.small-text {
+    font-size: 18px;
+    margin-left: 10px;
+}
+
+
+  .big-number {
+    font-size: 60px;
+    font-weight: bold;
+    align-items: center;
+}
+
+  .scrollable-table {
+    overflow-y: auto;
+    height: 400px;
+}
+
+.superadmin-dashboard{
+    margin-left: 300px;
+}
+
+/* MY INFO */
+input[type="password"] {
+    width: 30%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+input._password {
+    width: 30%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+
+.form-control {
+    width: 30%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}

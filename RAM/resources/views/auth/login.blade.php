@@ -13,6 +13,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}">
 </head>
 <body>
+    <body class='background' id="background" style="background-image: url('{{ asset('images/bg2.jpg') }}'); background-size: cover; background-position: center; background-repeat: no-repeat;">
 
 <div class="main">
 {{-- loader start --}}
@@ -48,21 +49,24 @@
 	</div>
 {{-- loader end --}}
     <section class="main-banner" id="main-banner">
-		<div class="sec-shape">
+		{{-- <div class="sec-shape">
 			<span class="shape shape1 animate-this"><img src="{{ asset('images/shape1.png') }}" alt="Shape"></span>
 			<span class="shape shape2 animate-this"><img src="{{ asset('images/shape2.png') }}" alt="Shape"></span>
 			<span class="shape shape3 animate-this"><img src="{{ asset('images/shape3.png') }}" alt="Shape"></span>
 			<span class="shape shape4 animate-this "><img src="{{ asset('images/shape2.png') }}" alt="Shape"></span>
 			<span class="shape shape5 animate-this"><img src="{{ asset('images/shape1.png') }}" alt="Shape"></span>
-		</div>
+		</div> --}}
 
     <div class="container">
         <div class="row">
             <div class="col-lg-6">
                 <div class="main-banner-slider wow fadeup-animation" data-wow-delay="0.6s">
                     <div class="banner-slider">
-                    <img src="{{ asset('images/ram1.2.png') }}" alt="Example Image">
+                        {{-- <img src="{{ asset('images/ram1.2.png') }}" alt="Example Image"> --}}
+                        <div class="banner-img back-img" style="background-image: url('{{ asset('images/ram1.2.png') }}');"></div>
+                        <div class="banner-img back-img" style="background-image: url('{{ asset('images/ram1.2.png') }}');"></div>
                     </div>
+
                 </div>
             </div>
             <div class="col-lg-6">
@@ -98,7 +102,7 @@
 
 </div>
 {{-- bubbles start --}}
-<div class="bubbles_wrap">
+{{-- <div class="bubbles_wrap">
     <div class="bubble x1"></div>
     <div class="bubble x2"></div>
     <div class="bubble x3"></div>
@@ -109,7 +113,7 @@
     <div class="bubble x8"></div>
     <div class="bubble x9"></div>
     <div class="bubble x10"></div>
-</div>
+</div> --}}
 {{-- bubbles end --}}
 
 <script src="{{ asset('js/jquery.min.js') }}"></script>

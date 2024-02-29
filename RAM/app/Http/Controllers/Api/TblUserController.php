@@ -88,14 +88,20 @@ class TblUserController extends Controller
             return redirect()->route('manage_admins.index')->with('success', 'Admin created successfully.');
         }
 
+        public function showCreateAdminForm()
+        {
+            return view('manage_admins.createadmin'); // Adjust the view path as needed
+        }
+
         // view for list of admins
         public function showAdmins()
             {
-                $admins = TblUser::where(function ($query) {
-                    $query->where('role', 'admin')
-                        ->orWhere('role', 'superadmin');
-                })->where('is_active', true)
-                ->get();
+                $admins = TblUser::where(function ($query)
+                    {
+                        $query->where('role', 'admin')
+                            ->orWhere('role', 'superadmin');
+                    })
+                            ->get();
 
                 return view('manage_admins.index', ['admins' => $admins]);
             }
@@ -110,7 +116,31 @@ class TblUserController extends Controller
                     if (request()->wantsJson()) {
                         return response()->json(['message' => 'Admin access removed successfully.']);
                     } else {
-                        return redirect()->route('manage_admins.index')->with('success', 'Admin access removed successfully.');
+                        return redirect()->route('admins.disable')->with('success', 'Admin access removed successfully.');
+                    }
+                }
+
+                public function showdisableAdmin()
+                {
+                    $admins = TblUser::where(function ($query) {
+                        $query->where('role', 'admin')
+                            ->orWhere('role', 'superadmin');
+                    })
+                    ->get();
+                    return view('manage_admins.enable_disable', compact('admins'));
+                }
+
+                // enable admins
+                public function enableAdmin($user_id)
+                {
+                    $admin = TblUser::where('user_id', $user_id)->firstOrFail();
+                    $admin->is_active = true;
+                    $admin->save();
+
+                    if (request()->wantsJson()) {
+                        return response()->json(['message' => 'Admin access restored successfully.']);
+                    } else {
+                        return redirect()->back()->with('success', 'Admin access restored successfully.');
                     }
                 }
 
@@ -180,8 +210,8 @@ class TblUserController extends Controller
             return redirect()->back()->with('success', 'Password updated successfully.');
         }
 
-    // android
-    public function loginAndroid(Request $request)
+        // ritchmarc
+        public function loginAndroid(Request $request)
             {
                 $request->validate([
                     'user_id' => 'required|string',
@@ -218,4 +248,3 @@ class TblUserController extends Controller
             }
 
 }
-

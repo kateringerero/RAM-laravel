@@ -62,63 +62,12 @@
 
 <div class="sidebar" id="sidebar">
     <div class="logo">
-        <div style="display: flex; justify-content: center;">
-            <img src="{{ asset('images/ramlogosmall.png') }}" alt="Logo" width="200">
+        <img src="{{ asset('images/ramlogosmall.png') }}" alt="Logo" width="200">
+        <div class="navbar-user">
+            <span>Welcome, {{ Auth::user()->first_name }}!</span>
         </div>
-            <div class="navbar-user">
-                <span>Welcome, {{ Auth::user()->first_name }}!</span>
-            </div>
     </div>
 
-    <ul>
-        <li>
-            <div class="menu-item">
-                @if(auth()->check())
-                    @switch(auth()->user()->role)
-                        @case('admin')
-                            <a class="menu-items" href="{{ route('admin.dashboard') }}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-                            @break
-                        @case('superadmin')
-                            <a class="menu-items" href="{{ route('superadmin.dashboard') }}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-                            @break
-                        @default
-                            <a class="menu-items" href="{{ route('user') }}"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-                    @endswitch
-                @endif
-            </div>
-        </li>
-
-            @if(auth()->check() && auth()->user()->role == 'superadmin')
-            <li class="dropdown">
-                <div class="menu-item">
-                <a class="menu-items" href="{{ route('manage_admins.index') }}"><i class="fas fa-user-shield"></i> Manage Admins</a>
-                </div>
-                <ul class="dropdown-content">
-                    <li>
-                        <div class="menu-item">
-                            <a class="sub-menu-items" href="{{ route('create-admin.show') }}"><i class="fas fa-user-plus"></i> Create Admin</a>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="menu-item">
-                            <a class="sub-menu-items" href="{{ route('admins_manage.show') }}"><i class="fas fa-toggle-off"></i> Enable/Disable Admin</a>
-                        </li>
-                </ul>
-            </li>
-            @endif
-
-        <li>
-            <div class="menu-item">
-                <a class="menu-items" href="{{ route('manage_appointments.index') }}"><i class="fas fa-calendar-check"></i> Manage Appointments</a>
-            </div>
-        </li>
-
-        <li>
-            <div class="menu-item">
-                <a class="menu-items" href="{{ route('my-account') }}"><i class="fas fa-user-circle"></i> My Account</a>
-            </div>
-        </li>
-    </ul>
     <div class="logout-container">
     <form action="{{ route('logout') }}" method="POST" style="display: inline;">
         @csrf
@@ -128,37 +77,9 @@
 </div>
 
 
-{{-- <div class="content2">
-        <div class="navbar">
-            <div class="navbar-title"></div>
-            <div class="navbar-user">
-                <span>Welcome, {{ Auth::user()->first_name }}!</span>
-                <form action="{{ route('logout') }}" method="POST" style="display: inline;">
-                    @csrf
-                    <button type="submit">Logout</button>
-                </form>
-            </div>
-        </div>
-</div> --}}
-
 <div class="page-content">
     @yield('content')
 </div>
-
-{{-- bubbles start --}}
-{{-- <div class="bubbles_wrap">
-    <div class="bubble x1"></div>
-    <div class="bubble x2"></div>
-    <div class="bubble x3"></div>
-    <div class="bubble x4"></div>
-    <div class="bubble x5"></div>
-    <div class="bubble x6"></div>
-    <div class="bubble x7"></div>
-    <div class="bubble x8"></div>
-    <div class="bubble x9"></div>
-    <div class="bubble x10"></div>
-</div> --}}
-{{-- bubbles end --}}
 
 <script src="{{ asset('js/jquery.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap.min.js') }}"></script>
