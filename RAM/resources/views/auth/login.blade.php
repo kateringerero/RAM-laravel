@@ -77,7 +77,7 @@
                         <form id="loginForm" action="{{ route('login') }}" method="POST">
                             @csrf
                             <div>
-                                <label for="email">Email:</label>
+                                <label for="email">Email Address:</label>
                                 <input class="form form-control" type="email" id="email_address" name="email_address" required placeholder="Enter Email">
                             </div>
                             <br>
