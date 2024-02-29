@@ -263,4 +263,28 @@ class TblScheduleController extends Controller
 
                 return response()->json(['message' => 'Schedule deleted successfully'], 200);
             }
+    // UPDATED 2/29
+    // update schedule for android
+            public function updateScheduleAndroid(Request $request, $reference_id)
+            {
+                $request->validate([
+                    'scheduled_date' => 'required|date',
+                    'start_time' => 'required|date_format:H:i',
+                    'end_time' => 'required|date_format:H:i|after:start_time',
+                ]);
+
+                $appointment = TblSchedule::where('reference_id', $reference_id)->first();
+
+                if (!$appointment) {
+                    return response()->json(['message' => 'Appointment not found'], 404);
+                }
+
+                $appointment->scheduled_date = $request->scheduled_date;
+                $appointment->start_time = $request->start_time;
+                $appointment->end_time = $request->end_time;
+                $appointment->status = 'rescheduled';
+                $appointment->save();
+
+                return response()->json(['message' => 'Appointment rescheduled successfully']);
+            }
 }
