@@ -32,7 +32,7 @@ Route::middleware('auth:api')->group(function () {
 
 });
 
-Route::post('/schedules/create', [TblScheduleController::class, 'createSchedule']);
+Route::post('/schedule/create', [TblScheduleController::class, 'createSchedule']);
 
 Route::post('/login', [AuthController::class, 'login']);
 // Route::post('/login', [TblUserController::class, 'login']);
@@ -66,11 +66,5 @@ Route::get('/users/{user_id}/info', [TblUserController::class, 'showInfo_Android
 
 Route::post('/schedules/create', [TblScheduleController::class, 'createScheduleAndroid']);
 Route::get('/appointment/created',[TblScheduleController::class, 'getAppointmentsByCreatorId']);
-// UPDATED 2/25
 Route::post('/schedules/delete', [TblScheduleController::class, 'deleteScheduleAndroid']);
-// UPDATED 2/29
 Route::put('/appointments/{reference_id}', [TblScheduleController::class, 'updateScheduleAndroid']);
-
-
-
-
