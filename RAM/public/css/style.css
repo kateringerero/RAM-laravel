@@ -1,3 +1,5 @@
+
+
 /*==========Fonts CSS Start==========*/
 @font-face {
     font-family: 'FontAwesome';
@@ -1080,7 +1082,7 @@ section {
     position: relative;
     float: right;
     width: 850px;
-    height: 623px;
+    height: 723px;
     overflow: hidden;
 }
 
@@ -6050,5 +6052,3 @@ section {
     border: 2px solid #63676b;
     border-radius: 5px;
   }
-
-
