@@ -9,16 +9,76 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
+
 class TblScheduleController extends Controller
 {
 
     public function index(Request $request)
         {
-            $schedules = TblSchedule::with('user')->get();
-            if ($request->wantsJson()) {
-                return response()->json(['schedules' => $schedules]);
+            $query = TblSchedule::query();
+
+            $role = auth()->user()->role;
+
+            switch ($role) {
+                case 'superadmin':
+                    $viewName = 'superadmin';
+                    break;
+                case 'admin':
+                    $viewName = 'admin';
+                    break;
+                case 'user':
+                    $viewName = 'user';
+                    break;
+                default:
+                    $viewName = 'default';
+                    break;
             }
-            return view('schedules.index', compact('schedules'));
+
+            $search = $request->input('search', '');
+
+            if (!empty($search)) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('reference_id', 'like', '%' . $search . '%')
+                          ->orWhere('creator_id', 'like', '%' . $search . '%')
+                          ->orWhereHas('user', function ($query) use ($search) {
+                              $query->where('last_name', 'like', '%' . $search . '%')
+                                    ->orWhere('first_name', 'like', '%' . $search . '%')
+                                    ->orWhere(DB::raw("concat(first_name, ' ', last_name)"), 'like', '%' . $search . '%');
+                          });
+                });
+            }
+
+            $paginatedSchedules = $query->paginate(6);
+
+            $startOfMonth = Carbon::now()->startOfMonth();
+            $endOfMonth = Carbon::now()->endOfMonth();
+            $statusCounts = TblSchedule::selectRaw("status, COUNT(*) as count")
+                    ->whereBetween('created_at', [$startOfMonth, $endOfMonth])
+                    ->groupBy('status')
+                    ->get()
+                    ->keyBy('status') // Key the collection by status for easy access
+                    ->map(function ($row) {
+                        return $row->count;
+                    });
+
+            $pendingApprovalsCount = $statusCounts['pending'] ?? 0;
+            $approvedCount = $statusCounts['approved'] ?? 0;
+            $releasedCount = $statusCounts['released'] ?? 0;
+
+            return view($viewName, compact('paginatedSchedules', 'pendingApprovalsCount', 'approvedCount', 'releasedCount', 'search'));
+        }
+
+        // view for # of appointments - pending
+        public function getPendingApprovalsCount()
+        {
+            $startOfMonth = Carbon::now()->startOfMonth();
+            $endOfMonth = Carbon::now()->endOfMonth();
+
+            $pendingApprovalsCount = TblSchedule::where('status', 'pending')
+                ->whereBetween('created_at', [$startOfMonth, $endOfMonth])
+                ->count();
+
+            return $pendingApprovalsCount;
         }
 
     //KENTH - inayos ko yung switch cases, handled_by, at redirect route
@@ -40,13 +100,40 @@ class TblScheduleController extends Controller
     }
     //KENTH
 
-     //KENTH
-     public function showAppointments()
-     {
-         $schedules = TblSchedule::with('user')->get();
-         return view('manage_appointments.index', compact('schedules'));
-     }
-     //KENTH
+
+    public function showAppointments(Request $request)
+        {
+            $search = $request->input('search', '');
+            $sort = $request->input('sort', 'scheduled_date');
+            $direction = $request->input('direction', 'asc');
+
+            $query = TblSchedule::query();
+
+            if (!empty($search)) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('reference_id', 'like', '%' . $search . '%')
+                          ->orWhere('creator_id', 'like', '%' . $search . '%')
+                          ->orWhereHas('user', function ($query) use ($search) {
+                              $query->where('last_name', 'like', '%' . $search . '%')
+                                    ->orWhere('first_name', 'like', '%' . $search . '%')
+                                    ->orWhere(DB::raw("concat(first_name, ' ', last_name)"), 'like', '%' . $search . '%');
+                          });
+                });
+            }
+
+
+            if ($sort == 'month') {
+                $query->select('*', DB::raw('MONTH(scheduled_date) as month'), DB::raw('YEAR(scheduled_date) as year'))
+                      ->groupBy('month', 'year')
+                      ->orderBy('year', 'asc')
+                      ->orderBy('month', 'asc');
+            }
+
+            $schedules = $query->paginate(6)->withQueryString();
+
+            return view('manage_appointments.index', compact('schedules', 'search'));
+        }
+
 
      public function createSchedule(Request $request)
      {
@@ -159,15 +246,6 @@ class TblScheduleController extends Controller
         return response()->json(['message' => 'Appointment released successfully']);
     }
 
-    public function viewSchedules()
-        {
-            // $schedules = TblSchedule::all();
-            $schedules = TblSchedule::with('user')->get();
-
-
-            return response()->json($schedules);
-        }
-
             public function showDashboard()
                 {
                     $userRole = auth()->user()->role;
@@ -231,7 +309,6 @@ class TblScheduleController extends Controller
 
             $creatorId = $request->input('creator_id');
 
-            // Assuming you want to retrieve schedules for a specific creator
             $appointments = TblSchedule::where('creator_id', $creatorId)
                                         ->select('reference_id', 'scheduled_date', 'start_time', 'purpose', 'status')
                                         ->get();
@@ -240,8 +317,8 @@ class TblScheduleController extends Controller
         }
 
 
-// UPDATED 2/25
-    public function deleteScheduleAndroid(Request $request)
+
+        public function deleteScheduleAndroid(Request $request)
             {
                 $validator = Validator::make($request->all(), [
                 'reference_id' => 'required|string',
@@ -251,20 +328,18 @@ class TblScheduleController extends Controller
                 return response()->json($validator->errors(), 400);
                 }
 
-                // Find the schedule to delete
                 $schedule = TblSchedule::where('reference_id', $request->reference_id)->first();
 
                 if (!$schedule) {
                 return response()->json(['message' => 'Schedule not found'], 404);
                 }
 
-                // Delete the schedule
                 $schedule->delete();
 
                 return response()->json(['message' => 'Schedule deleted successfully'], 200);
             }
-    // UPDATED 2/29
-    // update schedule for android
+
+            // update schedule for android
             public function updateScheduleAndroid(Request $request, $reference_id)
             {
                 $request->validate([
@@ -287,4 +362,6 @@ class TblScheduleController extends Controller
 
                 return response()->json(['message' => 'Appointment rescheduled successfully']);
             }
+
+
 }
