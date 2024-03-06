@@ -248,4 +248,3 @@ class TblUserController extends Controller
             }
 
 }
-
