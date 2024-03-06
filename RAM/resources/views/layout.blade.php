@@ -22,6 +22,19 @@
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+
+{{-- style for sorting --}}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+{{-- <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" /> --}}
+
 
 </head>
 <body class='background' id="background" style="background-image: url('{{ asset('images/bg1.jpg') }}'); background-size: cover; background-position: center; background-repeat: no-repeat;">
@@ -60,16 +73,30 @@
             </div>
         {{-- loader end --}}
 
+        <div class="content2">
+            <div class="navbar">
+                <div class="navimg">
+                    <img src="{{ asset('images/ramfavicon.png') }}" alt="Logo" width="200">
+                </div>
+                    <div class="navbar-user">
+                        <span>Welcome, {{ Auth::user()->first_name }}!</span>
+                        <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                            @csrf
+                            <button type="submit">Logout</button>
+                        </form>
+                    </div>
+            </div>
+        </div>
+
 <div class="sidebar" id="sidebar">
-    <div class="logo">
+    {{-- <div class="logo">
         <div style="display: flex; justify-content: center;">
-            <img src="{{ asset('images/ramlogosmall.png') }}" alt="Logo" width="200">
+            <img src="{{ asset('images/ramwithtext.png') }}" alt="Logo" width="200">
         </div>
             <div class="navbar-user">
                 <span>Welcome, {{ Auth::user()->first_name }}!</span>
             </div>
-    </div>
-
+    </div> --}}
     <ul>
         <li>
             <div class="menu-item">
@@ -119,27 +146,16 @@
             </div>
         </li>
     </ul>
-    <div class="logout-container">
+    {{-- <div class="logout-container">
     <form action="{{ route('logout') }}" method="POST" style="display: inline;">
         @csrf
         <button type="submit">Logout</button>
     </form>
-    </div>
+    </div> --}}
 </div>
 
 
-{{-- <div class="content2">
-        <div class="navbar">
-            <div class="navbar-title"></div>
-            <div class="navbar-user">
-                <span>Welcome, {{ Auth::user()->first_name }}!</span>
-                <form action="{{ route('logout') }}" method="POST" style="display: inline;">
-                    @csrf
-                    <button type="submit">Logout</button>
-                </form>
-            </div>
-        </div>
-</div> --}}
+
 
 <div class="page-content">
     @yield('content')

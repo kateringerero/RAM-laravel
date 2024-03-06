@@ -63,8 +63,8 @@
                 <div class="main-banner-slider wow fadeup-animation" data-wow-delay="0.6s">
                     <div class="banner-slider">
                         {{-- <img src="{{ asset('images/ram1.2.png') }}" alt="Example Image"> --}}
-                        <div class="banner-img back-img" style="background-image: url('{{ asset('images/ram1.2.png') }}');"></div>
-                        <div class="banner-img back-img" style="background-image: url('{{ asset('images/ram1.2.png') }}');"></div>
+                        {{-- <div class="banner-img back-img" style="background-image: url('{{ asset('images/ram1.2.png') }}');"></div>
+                        <div class="banner-img back-img" style="background-image: url('{{ asset('images/ram1.2.png') }}');"></div> --}}
                     </div>
 
                 </div>
@@ -101,6 +101,7 @@
     </div>
 
 </div>
+</section>
 {{-- bubbles start --}}
 {{-- <div class="bubbles_wrap">
     <div class="bubble x1"></div>
