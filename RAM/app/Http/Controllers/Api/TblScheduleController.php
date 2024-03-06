@@ -34,6 +34,7 @@ class TblScheduleController extends Controller
                     break;
             }
 
+            // search
             $search = $request->input('search', '');
 
             if (!empty($search)) {
@@ -48,15 +49,37 @@ class TblScheduleController extends Controller
                 });
             }
 
+            // sort
+            $sortField = $request->input('sort_field');
+                $sortOrder = $request->input('sort_order', 'asc'); // Default to ascending if not specified
+                $statusFilter = $request->input('status_filter');
+
+                if ($sortField) {
+                    $query->orderBy($sortField, $sortOrder);
+                }
+
+                if ($statusFilter) {
+                    $query->where('status', $statusFilter);
+                }
+
+                $paginatedSchedules = $query->paginate(6)->appends([
+                    'search' => $search,
+                    'sort_field' => $sortField,
+                    'sort_order' => $sortOrder,
+                    'status_filter' => $statusFilter,
+                ]);
+
+            // paginate
             $paginatedSchedules = $query->paginate(6);
 
+            // analytics
             $startOfMonth = Carbon::now()->startOfMonth();
             $endOfMonth = Carbon::now()->endOfMonth();
             $statusCounts = TblSchedule::selectRaw("status, COUNT(*) as count")
                     ->whereBetween('created_at', [$startOfMonth, $endOfMonth])
                     ->groupBy('status')
                     ->get()
-                    ->keyBy('status') // Key the collection by status for easy access
+                    ->keyBy('status')
                     ->map(function ($row) {
                         return $row->count;
                     });
