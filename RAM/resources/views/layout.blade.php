@@ -35,6 +35,9 @@
 
 {{-- <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" /> --}}
 
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+
+
 
 </head>
 <body class='background' id="background" style="background-image: url('{{ asset('images/bg1.jpg') }}'); background-size: cover; background-position: center; background-repeat: no-repeat;">
@@ -76,11 +79,25 @@
         <div class="content2">
             <div class="navbar">
                 <div class="navimg">
-                    <img src="{{ asset('images/ramfavicon.png') }}" alt="Logo" width="200">
+                    <img src="{{ asset('images/navbarimg.png') }}" alt="Logo" class="navimg-size">
                 </div>
                     <div class="navbar-user">
-                        <span>Welcome, {{ Auth::user()->first_name }}!</span>
-                        <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                        {{-- <span style="margin-bottom: 5px;"><i class="fa fa-user" aria-hidden="true"></i> {{ Auth::user()->first_name }}</span> --}}
+                        @php
+                            $dashboardUrl = '#';
+                            if (Auth::user()->role === 'superadmin') {
+                                $dashboardUrl = route('superadmin.dashboard');
+                            } elseif (Auth::user()->role === 'admin') {
+                                $dashboardUrl = route('admin.dashboard');
+                            }
+                        @endphp
+
+                            <a href="{{ $dashboardUrl }}" style="text-decoration: none; color: inherit;">
+                                <span style="margin-bottom: 5px;">
+                                    <i class="fa fa-user" aria-hidden="true"></i> {{ Auth::user()->first_name }}
+                                </span>
+                            </a>
+                        <form action="{{ route('logout') }}" method="POST" style="display: inline; margin-bottom: 8px;">
                             @csrf
                             <button type="submit">Logout</button>
                         </form>

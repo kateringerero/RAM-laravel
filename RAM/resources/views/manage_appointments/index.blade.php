@@ -1,10 +1,11 @@
 @extends('layout')
 
 @section('content')
-@if($schedules->isNotEmpty())
+
         <div class="container-manage-appointments">
             <div class="header-with-search">
                 <h2>Manage Appointments</h2>
+                {{-- search --}}
                 <form action="{{ route('manage_appointments.index') }}" method="GET" class="search-form">
                     <input type="text" name="search" placeholder="Search by Reference ID, Name..." value="{{ request('search') }}">
                     <button type="submit">Search</button>
@@ -18,7 +19,7 @@
                             </span>
                     </button>
                     <div class="dropdown-menu custom-dropdown" aria-labelledby="dropdownMenuButton">
-                        <form action="{{ route('superadmin.dashboard') }}" method="GET">
+                        <form action="{{ route('manage_appointments.index') }}" method="GET">
                             <div>
                                 <span><b>Sort by:</b></span>
                                 <label><input type="radio" name="sort_field" value="scheduled_date" {{ request('sort_field') == 'scheduled_date' ? 'checked' : '' }}> Scheduled Date</label>
@@ -46,24 +47,25 @@
                     </div>
                 </div>
             </div>
+            @if($paginatedSchedules->isNotEmpty())
             <table class="table">
                 <thead>
                     <tr>
-                        <th><a href="{{ route('manage_appointments.index', ['sort' => 'id', 'direction' => request('direction', 'asc') == 'asc' ? 'desc' : 'asc']) }}">ID</a></th>
+                        <th>ID</th>
                         <th>Creator ID</th>
-                        <th><a href="{{ route('manage_appointments.index', ['sort' => 'reference_id', 'direction' => request('direction', 'asc') == 'asc' ? 'desc' : 'asc']) }}">Reference ID</a></th>
+                        <th>Reference ID</th>
                         <th>Name</th>
                         <th>Email</th>
-                        <th><a href="{{ route('manage_appointments.index', ['sort' => 'scheduled_date', 'direction' => request('direction', 'asc') == 'asc' ? 'desc' : 'asc']) }}">Scheduled Date</a></th>
-                        <th>Time</th>
+                        <th>Scheduled Date</th>
+                        <th>Visit Time</th>
                         <th>Purpose</th>
-                        <th><a href="{{ route('manage_appointments.index', ['sort' => 'status', 'direction' => request('direction', 'asc') == 'asc' ? 'desc' : 'asc']) }}">Status</a></th>
+                        <th>Status</th>
                         <th>Handled By</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($schedules as $schedule)
+                    @foreach ($paginatedSchedules as $schedule)
                     <tr>
                         <td>{{ $schedule->id }}</td>
                         <td>{{ $schedule->creator_id }}</td>
@@ -71,10 +73,10 @@
                         <td>{{ optional($schedule->user)->first_name }} {{ optional($schedule->user)->last_name }}</td>
                         <td>{{ optional($schedule->user)->email_address }}</td>
                         <td>{{ $schedule->scheduled_date }}</td>
-                        <td>{{ $schedule->start_time }} - {{ $schedule->end_time }}</td>
+                        <td>{{ $schedule->start_time->format('H:i') }} - {{ $schedule->end_time->format('H:i') }}</td>
                         <td>{{ $schedule->purpose }}</td>
                         <td>
-                            <!-- KENTH - inayos ko lang ulit switches -->
+                            <span class="status-block status-{{ str_replace('_', '-', strtolower($schedule->status)) }}">
                             @switch($schedule->status)
                                 @case("approved")
                                     Approved
@@ -85,19 +87,27 @@
                                 @case("follow-up")
                                     For Follow-up
                                     @break
-								@case("rescheduled")
-									Rescheduled
-									@break
+                                @case("rescheduled")
+                                    For Reschedule
+                                    @break
                                 @case("pending")
-									Pending
-									@break
+                                    Pending
+                                    @break
                                 @case("done")
-									Done
-									@break
+                                    Complete
+                                    @break
+                                @case("rescheduled_by_user")
+                                    Rescheduled by User
+                                    @break
+                                @case("cancelled")
+                                    Cancelled by user
+                                    @break
+                                @case("cancelled_no_show")
+                                    Cancelled - No Show
+                                    @break
                                 @default
                                     Unknown
                             @endswitch
-                            <!-- KENTH -->
                         </td>
                         <td>{{ optional($schedule->handler)->first_name }} {{ optional($schedule->handler)->last_name }} </td>
                         <td>
@@ -118,7 +128,7 @@
                     @endforeach
                 </tbody>
             </table>
-            {{ $schedules->links() }}
+            {{ $paginatedSchedules->links() }}
         </div>
 
     @endif
@@ -128,4 +138,5 @@
        $('.dropdown-toggle').dropdown();
      });
      </script>
+
 @endsection

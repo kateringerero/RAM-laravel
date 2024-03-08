@@ -59,15 +59,15 @@
 
     <div class="container">
         <div class="row">
-            <div class="col-lg-6">
-                <div class="main-banner-slider wow fadeup-animation" data-wow-delay="0.6s">
-                    <div class="banner-slider">
-                        {{-- <img src="{{ asset('images/ram1.2.png') }}" alt="Example Image"> --}}
-                        {{-- <div class="banner-img back-img" style="background-image: url('{{ asset('images/ram1.2.png') }}');"></div>
-                        <div class="banner-img back-img" style="background-image: url('{{ asset('images/ram1.2.png') }}');"></div> --}}
-                    </div>
 
-                </div>
+            <div class="col-lg-5">
+                <img src="{{ asset('images/ram1.2.png') }}" alt="Example Image" class="login-img">
+                {{-- <div class="main-banner-slider wow fadeup-animation" data-wow-delay="0.6s">
+                    <div class="banner-slider">
+                        <div class="banner-img back-img" style="background-image: url('{{ asset('images/ram1.2.png') }}');"></div>
+                        <div class="banner-img back-img" style="background-image: url('{{ asset('images/ram1.2.png') }}');"></div>
+                    </div>
+                </div> --}}
             </div>
             <div class="col-lg-6">
                 <div class="banner-content">

@@ -1,3 +1,8 @@
+.col-lg-5 .login-img {
+    width: 100%;
+    height: auto;
+    max-width: 400px; /* Adjust this value to control the size */
+}
 
 .page-content {
     margin-top: 50px;
@@ -7,19 +12,24 @@
     margin-left: 310px;
 }
 
+.container-manage-appointments h2{
+    margin-top: 50px;
+}
+
 .container-dashboard-appointments{
     margin-left: 20px;
 }
 
 /* my account */
 .personal-data{
-    margin-left: 320px;
+    margin-left: 600px;
     margin-bottom: 20px;
     max-width: 600px;
-        margin: 20px auto;
+        /* margin: 20px auto; */
         padding: 20px;
         border: 1px solid #ccc;
         border-radius: 5px;
+        margin-top: 80px;
 }
 
 .personal-data h2 {
@@ -32,12 +42,12 @@
 }
 
 .personal-data label {
-    font-weight: bold;
+
     margin-right: 12px;
 }
 
 .personal-data span {
-    color: #555;
+    color: #353232;
 }
 
 .personal-data button {
@@ -100,22 +110,38 @@
 /* manage admins */
 .container-manage-admin{
     margin-left: 320px;
-    margin-bottom: 20px;
+    margin-top: 80px;
 }
 
 .container-create-admin{
-    margin-left: 310px;
+    margin-left: 320px;
     margin-bottom: 20px;
+    margin-top: 80px;
 }
 
 .container-create-admin .form-control{
     width: 30%;
-    padding: px;
+    padding: 3px;
     border: 1px solid #ccc;
     border-radius: 4px;
 }
 
 /* manage appointments status button */
+.select-with-icon select {
+    appearance: none;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="%23<fill_color>"><path d="M20.7,5.3l-2.1-2.1c-0.4-0.4-1-0.4-1.4,0l-12,12v3.5h3.5l12-12C21.1,6.3,21.1,5.7,20.7,5.3z"/><path d="M0,0h24v24H0V0z" fill="none"/></svg>') no-repeat 96% 50%;
+    background-size: 18px 18px;
+    padding-right: 1.5em; /* Make room for the icon */
+  }
+
+  /* This is needed to target the icon color in the data URL */
+  .select-with-icon select:required:invalid {
+    color: gray; /* Fallback color */
+  }
+  .select-with-icon select option {
+    color: black; /* Option text color */
+  }
+
 select[name="status"] {
     cursor: pointer;
     padding: 5px 10px;
@@ -148,7 +174,7 @@ select[name="status"]:focus {
 
 /* APPOINTMENTS DASHBOARD */
 .table td{
-    font-size: 12px;
+    font-size: 14px;
 }
 
 .table th a {
@@ -164,18 +190,18 @@ select[name="status"]:focus {
 
 
 
-.appointmentbox{
+/* .appointmentbox{
     overflow: auto;
     margin-top: 10px;
     margin-right: 20px;
     margin-left: 10px;
-    height: 70vh;
-    /* border: 1px solid rgb(255, 255, 255); */
-    background-color: rgba(221, 221, 221, 0.164);
+    height: 65vh;
+    border: 1px solid rgb(255, 255, 255);
+    background-color: rgba(240, 240, 240, 0.76);
     box-shadow: 5px 5px 5px 5px #969696b4;
     backdrop-filter: blur(6px);
     border-radius: 10px;
-  }
+  } */
 
   /* sort */
     /* sort span icon*/
@@ -337,7 +363,7 @@ select[name="status"]:focus {
 
   /* STATISTICS */
   .appointments-stats{
-    margin-left: 300px;
+    /* margin-left: 100px; */
     margin-top: 30px;
 }
   .statistics{
@@ -350,23 +376,66 @@ select[name="status"]:focus {
     gap: 5rem;
   }
 
-  .stats {
+  .stats-pending {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     margin-top: 0;
-    width: 300px;
-    height: 10vh;
-    border: 1px solid rgb(255, 255, 255);
-    background-color: rgba(221, 221, 221, 0.164);
+    width: 350px;
+    height: 13vh;
+    /* border: 1px solid rgb(255, 255, 255); */
+    background-color: rgba(133, 131, 131, 0.164);
     box-shadow: 5px 5px 5px 5px #969696b4;
     backdrop-filter: blur(6px);
     text-align: center;
     margin-right: 20px;
 }
 
-.big-number, .stats p {
+.big-number, .stats-pending p {
+    margin: 2px;
+    padding: 0;
+}
+
+.stats-approved {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0;
+    width: 350px;
+    height: 13vh;
+    /* border: 1px solid rgb(255, 255, 255); */
+    background-color: rgba(0, 128, 0, 0.562);
+    box-shadow: 5px 5px 5px 5px #969696b4;
+    backdrop-filter: blur(6px);
+    text-align: center;
+    margin-right: 20px;
+}
+
+.big-number, .stats-approved p {
+    margin: 2px;
+    padding: 0;
+    color: black;
+}
+
+.stats-released {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0;
+    width: 350px;
+    height: 13vh;
+    /* border: 1px solid rgb(255, 255, 255); */
+    background-color: rgba(255, 166, 0, 0.719);
+    box-shadow: 5px 5px 5px 5px #969696b4;
+    backdrop-filter: blur(6px);
+    text-align: center;
+    margin-right: 20px;
+}
+
+.big-number, .stats-released p {
     margin: 2px;
     padding: 0;
 }
@@ -414,3 +483,23 @@ input._password {
     border: 1px solid #ccc;
     border-radius: 4px;
 }
+
+/* color per status */
+
+.status-block {
+    padding: 2px 8px;
+    border-radius: 4px;
+    color: white;
+    display: inline-block;
+}
+
+.status-approved { background-color: green; }
+.status-released { background-color: orange; }
+.status-follow-up { background-color: blue; }
+.status-rescheduled { background-color: purple; }
+.status-pending { background-color: grey; color: black;}
+.status-done { background-color: darkgreen; }
+.status-rescheduled-by-user { background-color: teal; }
+.status-cancelled { background-color: red; }
+.status-cancelled-no-show { background-color: brown; }
+.status-unknown { background-color: black; }

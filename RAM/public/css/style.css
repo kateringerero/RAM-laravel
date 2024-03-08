@@ -1082,29 +1082,28 @@ section {
 .banner-slider {
     position: relative;
     float: right;
-    width: 850px;
-    height: 723px;
+    width: 950px;
+    height: 823px;
     overflow: hidden;
 }
 
-.banner-slider:before {
+/* .banner-slider:before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
-    /* background-image: url('../images/banner-slider-shape.png'); */
+    height: 80%;
     background-size: 100% 100%;
     background-position: center;
     background-repeat: no-repeat;
     z-index: 1;
-}
+} */
 
 .banner-img {
     width: 100%;
     height: 623px;
-    animation: zoom-im-out 10s linear infinite alternate;
+    /* animation: zoom-im-out 3s linear infinite alternate; */
 }
 
 @keyframes zoom-im-out {
