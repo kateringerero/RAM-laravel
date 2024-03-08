@@ -4,6 +4,18 @@
     max-width: 400px; /* Adjust this value to control the size */
 }
 
+.col-lg-5{
+    padding: 0 30px;
+    padding-left: 50px;
+    padding-right: 50px;
+}
+
+.login-img{
+    padding: 0 30px;
+    padding-left: 50px;
+    padding-right: 50px;
+}
+
 .page-content {
     margin-top: 50px;
 }
