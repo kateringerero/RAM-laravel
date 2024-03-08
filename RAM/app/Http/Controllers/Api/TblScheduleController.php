@@ -17,79 +17,140 @@ class TblScheduleController extends Controller
         {
             $query = TblSchedule::query();
 
-            $role = auth()->user()->role;
-
-            switch ($role) {
-                case 'superadmin':
-                    $viewName = 'superadmin';
-                    break;
-                case 'admin':
-                    $viewName = 'admin';
-                    break;
-                case 'user':
-                    $viewName = 'user';
-                    break;
-                default:
-                    $viewName = 'default';
-                    break;
-            }
-
-            // search
+            // search functionality
             $search = $request->input('search', '');
-
             if (!empty($search)) {
-                $query->where(function ($query) use ($search) {
-                    $query->where('reference_id', 'like', '%' . $search . '%')
-                          ->orWhere('creator_id', 'like', '%' . $search . '%')
-                          ->orWhereHas('user', function ($query) use ($search) {
-                              $query->where('last_name', 'like', '%' . $search . '%')
-                                    ->orWhere('first_name', 'like', '%' . $search . '%')
-                                    ->orWhere(DB::raw("concat(first_name, ' ', last_name)"), 'like', '%' . $search . '%');
-                          });
-                });
+                            $query->where(function ($query) use ($search) {
+                                $query->where('reference_id', 'like', '%' . $search . '%')
+                                    ->orWhere('creator_id', 'like', '%' . $search . '%')
+                                    ->orWhereHas('user', function ($query) use ($search) {
+                                        $query->where('last_name', 'like', '%' . $search . '%')
+                                                ->orWhere('first_name', 'like', '%' . $search . '%')
+                                                ->orWhere(DB::raw("concat(first_name, ' ', last_name)"), 'like', '%' . $search . '%');
+                                    });
+                            });
+                        }
+
+                        // sort
+                        $sortField = $request->input('sort_field');
+                        $sortOrder = $request->input('sort_order', 'asc');
+                        $statusFilter = $request->input('status_filter');
+
+                        if ($sortField) {
+                            $query->orderBy($sortField, $sortOrder);
+                        }
+
+                        if ($statusFilter) {
+                            $query->where('status', $statusFilter);
+                        }
+
+                        // analytics
+                        $analyticsQuery = clone $query;
+
+                        $statusCounts = $analyticsQuery->selectRaw("status, COUNT(*) as count")
+                                        ->groupBy('status')
+                                        ->get()
+                                        ->keyBy('status')
+                                        ->map(function ($row) {
+                                            return $row->count;
+                                        });
+
+                        $pendingApprovalsCount = $statusCounts['pending'] ?? 0;
+                        $approvedCount = $statusCounts['approved'] ?? 0;
+                        $releasedCount = $statusCounts['released'] ?? 0;
+
+                        // pagination
+                        $paginatedSchedules = $query->paginate(10)->appends([
+                            'search' => $search,
+                            'sort_field' => $sortField,
+                            'sort_order' => $sortOrder,
+                            'status_filter' => $statusFilter,
+                        ]);
+
+                        // view based on role and view for manage appointments
+            $manageAppointments = $request->query('manageAppointments', false);
+            if ($manageAppointments) {
+                $viewName = 'manage_appointments.index';
+            } else {
+                $role = auth()->user()->role;
+                switch ($role) {
+                    case 'superadmin':
+                        $viewName = 'superadmin';
+                        break;
+                    case 'admin':
+                        $viewName = 'admin';
+                        break;
+                    case 'user':
+                        $viewName = 'user';
+                        break;
+                    default:
+                        $viewName = 'default';
+                        break;
+                }
             }
 
-            // sort
-            $sortField = $request->input('sort_field');
-                $sortOrder = $request->input('sort_order', 'asc'); // Default to ascending if not specified
-                $statusFilter = $request->input('status_filter');
-
-                if ($sortField) {
-                    $query->orderBy($sortField, $sortOrder);
-                }
-
-                if ($statusFilter) {
-                    $query->where('status', $statusFilter);
-                }
-
-                $paginatedSchedules = $query->paginate(6)->appends([
-                    'search' => $search,
-                    'sort_field' => $sortField,
-                    'sort_order' => $sortOrder,
-                    'status_filter' => $statusFilter,
-                ]);
-
-            // paginate
-            $paginatedSchedules = $query->paginate(6);
-
-            // analytics
-            $startOfMonth = Carbon::now()->startOfMonth();
-            $endOfMonth = Carbon::now()->endOfMonth();
-            $statusCounts = TblSchedule::selectRaw("status, COUNT(*) as count")
-                    ->whereBetween('created_at', [$startOfMonth, $endOfMonth])
-                    ->groupBy('status')
-                    ->get()
-                    ->keyBy('status')
-                    ->map(function ($row) {
-                        return $row->count;
-                    });
-
-            $pendingApprovalsCount = $statusCounts['pending'] ?? 0;
-            $approvedCount = $statusCounts['approved'] ?? 0;
-            $releasedCount = $statusCounts['released'] ?? 0;
-
+            // Return the view with necessary data
             return view($viewName, compact('paginatedSchedules', 'pendingApprovalsCount', 'approvedCount', 'releasedCount', 'search'));
         }
+
+        public function manageAppointmentsindex(Request $request)
+        {
+            $query = TblSchedule::query();
+
+            // search functionality
+            $search = $request->input('search', '');
+            if (!empty($search)) {
+                            $query->where(function ($query) use ($search) {
+                                $query->where('reference_id', 'like', '%' . $search . '%')
+                                    ->orWhere('creator_id', 'like', '%' . $search . '%')
+                                    ->orWhereHas('user', function ($query) use ($search) {
+                                        $query->where('last_name', 'like', '%' . $search . '%')
+                                                ->orWhere('first_name', 'like', '%' . $search . '%')
+                                                ->orWhere(DB::raw("concat(first_name, ' ', last_name)"), 'like', '%' . $search . '%');
+                                    });
+                            });
+                        }
+
+                        // sort
+                        $sortField = $request->input('sort_field');
+                        $sortOrder = $request->input('sort_order', 'asc');
+                        $statusFilter = $request->input('status_filter');
+
+                        if ($sortField) {
+                            $query->orderBy($sortField, $sortOrder);
+                        }
+
+                        if ($statusFilter) {
+                            $query->where('status', $statusFilter);
+                        }
+
+                        // analytics
+                        $analyticsQuery = clone $query;
+
+                        $statusCounts = $analyticsQuery->selectRaw("status, COUNT(*) as count")
+                                        ->groupBy('status')
+                                        ->get()
+                                        ->keyBy('status')
+                                        ->map(function ($row) {
+                                            return $row->count;
+                                        });
+
+                        $pendingApprovalsCount = $statusCounts['pending'] ?? 0;
+                        $approvedCount = $statusCounts['approved'] ?? 0;
+                        $releasedCount = $statusCounts['released'] ?? 0;
+
+                        // pagination
+                        $paginatedSchedules = $query->paginate(10)->appends([
+                            'search' => $search,
+                            'sort_field' => $sortField,
+                            'sort_order' => $sortOrder,
+                            'status_filter' => $statusFilter,
+                        ]);
+
+            // Return the view with necessary data
+            return view('manage_appointments.index', compact('paginatedSchedules', 'pendingApprovalsCount', 'approvedCount', 'releasedCount', 'search'));
+        }
+
 
         // view for # of appointments - pending
         public function getPendingApprovalsCount()
@@ -357,9 +418,11 @@ class TblScheduleController extends Controller
                 return response()->json(['message' => 'Schedule not found'], 404);
                 }
 
-                $schedule->delete();
+                // update from delete to set status to cancelled
+                $schedule->status = 'cancelled';
+                $schedule->save();
 
-                return response()->json(['message' => 'Schedule deleted successfully'], 200);
+                return response()->json(['message' => 'Schedule cancelled successfully'], 200);
             }
 
             // update schedule for android
@@ -380,7 +443,7 @@ class TblScheduleController extends Controller
                 $appointment->scheduled_date = $request->scheduled_date;
                 $appointment->start_time = $request->start_time;
                 $appointment->end_time = $request->end_time;
-                $appointment->status = 'rescheduled';
+                $appointment->status = 'rescheduled_by_user';
                 $appointment->save();
 
                 return response()->json(['message' => 'Appointment rescheduled successfully']);

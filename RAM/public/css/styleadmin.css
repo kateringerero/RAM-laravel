@@ -22,7 +22,7 @@ body {
         height: 100vh;
         width: 290px;
         position: fixed;
-        top: 50px;
+        top: 65px;
         left: 0;
         bottom: 0;
         background-color: #fffbfb91;
@@ -87,10 +87,10 @@ body {
         margin-bottom: 20px;
     }
 
-    .logout-container{
+    /* .logout-container{
         margin-top: auto;
         margin-bottom: 10px;
-    }
+    } */
 
 
 .dropdown {
@@ -187,29 +187,35 @@ body {
 }
 
 .navbar {
-    height: 50px;
+    height: 65px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #3f3f3f;
+    background-color: #979797;
     color: #fff;
     padding: 0 10px;
-
 }
 
 .navimg img {
-    width: auto;
-    height: 40px;
+    /* width: auto; */
+    height: 50px;
     vertical-align: middle;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
+.navimg-size {
+    width: auto;
+    height: auto;
+    margin-bottom: 20px;
+}
+
 .navbar-user {
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-bottom: 15px;
 }
 
 .navbar-user span {

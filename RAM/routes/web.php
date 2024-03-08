@@ -58,6 +58,9 @@ Route::post('/user/update-password', [TblUserController::class, 'updatePassword'
 
 Route::get('superadmin/dashboard', [TblScheduleController::class, 'index'])->name('superadmin.dashboard');
 Route::get('admin/dashboard', [TblScheduleController::class, 'index'])->name('admin.dashboard');
+Route::get('/manage-appointments', [TblScheduleController::class, 'manageAppointmentsindex'])->name('manage_appointments.index');
+
+
 
 // Searchbar
 // Route::get('superadmin/dashboard', [TblScheduleController::class, 'index'])->name('dashboard');

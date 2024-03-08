@@ -6,6 +6,26 @@
 </head>
 
 <div class="appointments">
+    <div class="appointments-stats">
+        <div class="statistics">
+            <!-- Pending Approvals -->
+            <div class="stats-pending">
+                <p class="big-number">{{ $pendingApprovalsCount }} <span class="small-text">Pending Approvals</span></p>
+                {{-- <p>Pending Approvals</p> --}}
+            </div>
+            <!-- Approved Appointments -->
+            <div class="stats-approved">
+                <p class="big-number">{{ $approvedCount }} <span class="small-text">Approved Appointments</span></p>
+                {{-- <p>Pending Approvals</p> --}}
+            </div>
+            <!-- For Releasing Appointments -->
+            <div class="stats-released">
+                <p class="big-number">{{ $releasedCount }} <span class="small-text">For Releasing</span></p>
+                {{-- <p>Pending Approvals</p> --}}
+            </div>
+        </div>
+    </div>
+
     <div class="appointmentbox">
                     <div class="header-with-search">
                     {{-- search --}}
@@ -41,8 +61,9 @@
                                     <label><input type="radio" name="status_filter" value="pending" {{ request('status_filter') == 'pending' ? 'checked' : '' }}> Pending</label>
                                     <label><input type="radio" name="status_filter" value="released" {{ request('status_filter') == 'for releasing' ? 'checked' : '' }}> For Releasing</label>
                                     <label><input type="radio" name="status_filter" value="follow-up" {{ request('status_filter') == 'for follow up' ? 'checked' : '' }}> For Follow-up</label>
-                                    <label><input type="radio" name="status_filter" value="done" {{ request('status_filter') == 'done' ? 'checked' : '' }}> Done</label>
+                                    <label><input type="radio" name="status_filter" value="done" {{ request('status_filter') == 'done' ? 'checked' : '' }}> Completed</label>
                                     <label><input type="radio" name="status_filter" value="rescheduled" {{ request('status_filter') == 'reschedule' ? 'checked' : '' }}> Reschedule</label>
+                                    <label><input type="radio" name="status_filter" value="rescheduled_by_user" {{ request('status_filter') == 'rescheduled by user' ? 'checked' : '' }}> Rescheduled by User</label>
                                 </div>
 
                                 <input type="hidden" name="search" value="{{ request('search') }}">
@@ -63,7 +84,7 @@
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Scheduled Date</th>
-                                <th>Time</th>
+                                <th>Visit Time</th>
                                 <th>Purpose</th>
                                 <th>Status</th>
                                 <th>Handled By</th>
@@ -78,9 +99,10 @@
                                 <td>{{ optional($schedule->user)->first_name }} {{ optional($schedule->user)->last_name }}</td>
                                 <td>{{ optional($schedule->user)->email_address }}</td>
                                 <td>{{ $schedule->scheduled_date }}</td>
-                                <td>{{ $schedule->start_time }} - {{ $schedule->end_time }}</td>
+                                <td>{{ $schedule->start_time->format('H:i') }} - {{ $schedule->end_time->format('H:i') }}</td>
                                 <td>{{ $schedule->purpose }}</td>
                                 <td>
+                                    <span class="status-block status-{{ str_replace('_', '-', strtolower($schedule->status)) }}">
                                     @switch($schedule->status)
                                         @case("approved")
                                             Approved
@@ -98,7 +120,16 @@
                                             Pending
                                             @break
                                         @case("done")
-                                            Done
+                                            Completed
+                                            @break
+                                        @case("rescheduled_by_user")
+                                            Rescheduled by User
+                                            @break
+                                        @case("cancelled")
+                                            Cancelled by user
+                                            @break
+                                        @case("cancelled_no_show")
+                                            Cancelled - No Show
                                             @break
                                         @default
                                             Unknown
@@ -118,25 +149,7 @@
     </div>
 </div>
 
-<div class="appointments-stats">
-    <div class="statistics">
-        <!-- Pending Approvals -->
-        <div class="stats">
-            <p class="big-number">{{ $pendingApprovalsCount }} <span class="small-text">Pending Approvals</span></p>
-            {{-- <p>Pending Approvals</p> --}}
-        </div>
-        <!-- Approved Appointments -->
-        <div class="stats">
-            <p class="big-number">{{ $approvedCount }} <span class="small-text">Approved Appointments</span></p>
-            {{-- <p>Pending Approvals</p> --}}
-        </div>
-        <!-- For Releasing Appointments -->
-        <div class="stats">
-            <p class="big-number">{{ $releasedCount }} <span class="small-text">For Releasing</span></p>
-            {{-- <p>Pending Approvals</p> --}}
-        </div>
-    </div>
-</div>
+
 
 <script>
    $(document).ready(function() {
